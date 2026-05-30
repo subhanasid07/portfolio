@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subhana Siddique — Business Intelligence & Analytics Consultant</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080c18;
+  --bg2:#0d1220;
+  --bg3:#131a2e;
+  --card:#0f1525;
+  --border:#1a2640;
+  --accent:#4f8ef7;
+  --accent2:#7ab3ff;
+  --green:#0fd494;
+  --amber:#f5a623;
+  --purple:#9b72f7;
+  --pink:#f06292;
+  --teal:#14b8a6;
+  --text:#eef2ff;
+  --muted:#8ca0c0;
+  --soft:#4a5d7a;
+  --r:12px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* GRID BG */
+.grid-bg{
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;
+  background-image:linear-gradient(rgba(79,142,247,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,0.035) 1px,transparent 1px);
+  background-size:52px 52px;pointer-events:none;
+}
+.glow{position:fixed;top:-300px;right:-200px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(79,142,247,0.07) 0%,transparent 65%);pointer-events:none;z-index:0;}
+.glow2{position:fixed;bottom:-300px;left:-200px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(155,114,247,0.05) 0%,transparent 65%);pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 3rem;background:rgba(8,12,24,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{text-decoration:none;font-size:0.8rem;font-weight:500;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover{color:var(--accent2);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 3rem 4rem;max-width:1300px;margin:0 auto;position:relative;}
+.hero-inner{position:relative;z-index:1;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);border:1px solid rgba(15,212,148,0.25);padding:6px 14px;border-radius:100px;margin-bottom:2rem;background:rgba(15,212,148,0.07);}
+.hero-tag-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,5.5vw,5.2rem);line-height:1.08;letter-spacing:-0.01em;margin-bottom:1.5rem;}
+.hero h1 em{color:var(--accent2);font-style:italic;}
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:580px;line-height:1.85;margin-bottom:2.5rem;}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3.5rem;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:0.75rem 1.6rem;border-radius:9px;font-size:0.86rem;font-weight:600;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all 0.22s;cursor:pointer;border:none;letter-spacing:0.02em;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#3a7ae0;transform:translateY(-2px);box-shadow:0 8px 28px rgba(79,142,247,0.35);}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent2);transform:translateY(-2px);}
+
+/* STAT STRIP */
+.stat-strip{display:flex;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--card);max-width:760px;}
+.stat-item{flex:1;padding:1.2rem 1rem;border-right:1px solid var(--border);text-align:center;}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--accent2);display:block;line-height:1;margin-bottom:4px;}
+.stat-lbl{font-size:0.68rem;color:var(--muted);font-weight:500;letter-spacing:0.05em;text-transform:uppercase;}
+
+/* CHART STRIP */
+.chart-strip{position:relative;margin:4rem 0 0;width:100%;height:100px;overflow:hidden;border-top:1px solid var(--border);background:linear-gradient(to bottom,transparent,var(--bg));}
+.chart-bars{display:flex;align-items:flex-end;gap:5px;position:absolute;bottom:0;left:0;right:0;padding:0 2rem;height:100%;}
+.bar{flex:1;border-radius:3px 3px 0 0;opacity:0.15;transition:opacity 0.3s;}
+.bar:hover{opacity:0.38;}
+
+/* SECTIONS */
+section{padding:5rem 3rem;max-width:1300px;margin:0 auto;position:relative;z-index:1;}
+.s-label{display:inline-flex;align-items:center;gap:8px;font-size:0.7rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent2);margin-bottom:0.5rem;}
+.s-label::before{content:'';display:inline-block;width:18px;height:1px;background:var(--accent);}
+.s-title{font-family:'DM Serif Display',serif;font-size:clamp(1.9rem,3vw,2.8rem);line-height:1.1;letter-spacing:-0.01em;margin-bottom:2.5rem;}
+hr.div{border:none;border-top:1px solid var(--border);}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;}
+.about-text p{font-size:0.95rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;}
+.about-text p strong{color:var(--text);}
+.journey-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;position:relative;overflow:hidden;}
+.journey-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--purple));}
+.journey-title{font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:1.2rem;}
+.journey-steps{display:flex;flex-direction:column;gap:0.9rem;}
+.j-step{display:flex;align-items:flex-start;gap:12px;}
+.j-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;}
+.j-content{flex:1;}
+.j-name{font-size:0.82rem;font-weight:600;color:var(--text);margin-bottom:1px;}
+.j-desc{font-size:0.72rem;color:var(--muted);}
+.j-arrow{color:var(--soft);font-size:0.7rem;text-align:center;padding:2px 0 2px 44px;}
+
+/* CERTS */
+.cert-row{display:flex;flex-wrap:wrap;gap:0.7rem;margin-bottom:2rem;}
+.cert-badge{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-size:0.76rem;font-weight:600;letter-spacing:0.02em;border:1px solid;}
+.cert-blue{background:rgba(79,142,247,0.1);border-color:rgba(79,142,247,0.3);color:var(--accent2);}
+.cert-purple{background:rgba(155,114,247,0.1);border-color:rgba(155,114,247,0.3);color:#b899ff;}
+.cert-green{background:rgba(15,212,148,0.1);border-color:rgba(15,212,148,0.3);color:#0fd494;}
+.cert-amber{background:rgba(245,166,35,0.1);border-color:rgba(245,166,35,0.3);color:#f5a623;}
+
+/* SKILLS — tag-only, no percentages */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:border-color 0.2s,transform 0.2s;position:relative;overflow:hidden;}
+.skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.skill-card.bi::before{background:linear-gradient(90deg,var(--accent),var(--purple));}
+.skill-card.db::before{background:linear-gradient(90deg,var(--green),var(--teal));}
+.skill-card.cloud::before{background:linear-gradient(90deg,var(--amber),var(--pink));}
+.skill-card.script::before{background:linear-gradient(90deg,var(--purple),var(--pink));}
+.skill-card:hover{border-color:rgba(79,142,247,0.4);transform:translateY(-3px);}
+.skill-head{display:flex;align-items:center;gap:10px;margin-bottom:1.2rem;}
+.skill-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.skill-h{font-size:0.9rem;font-weight:600;color:var(--text);}
+
+/* Proficiency tiers */
+.skill-tier{margin-bottom:0.9rem;}
+.tier-label{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--soft);margin-bottom:0.45rem;}
+.tier-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tag{font-size:0.7rem;padding:3px 9px;border-radius:5px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-weight:500;}
+.tag.advanced{background:rgba(79,142,247,0.1);border-color:rgba(79,142,247,0.25);color:var(--accent2);}
+.tag.proficient{background:rgba(155,114,247,0.08);border-color:rgba(155,114,247,0.2);color:#b899ff;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2.5rem;}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:0;width:1px;background:var(--border);}
+.t-item{position:relative;margin-bottom:2.5rem;}
+.t-dot{position:absolute;left:-2.5rem;top:4px;width:16px;height:16px;border-radius:50%;background:var(--accent);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--accent),0 0 12px rgba(79,142,247,0.4);}
+.t-period{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;color:var(--accent2);margin-bottom:3px;text-transform:uppercase;}
+.t-title{font-family:'DM Serif Display',serif;font-size:1.25rem;margin-bottom:2px;}
+.t-company{font-size:0.83rem;color:var(--muted);margin-bottom:0.8rem;}
+.t-bullets{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.t-bullets li{font-size:0.87rem;color:var(--muted);padding-left:1.1rem;position:relative;line-height:1.65;}
+.t-bullets li::before{content:'›';position:absolute;left:0;color:var(--accent);}
+.t-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:0.8rem;}
+
+/* PROJECT CARDS — case-study style */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.25rem;}
+.proj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color 0.2s,transform 0.2s;display:flex;flex-direction:column;}
+.proj-card:hover{border-color:rgba(79,142,247,0.4);transform:translateY(-4px);}
+.proj-visual{height:80px;padding:12px 16px 0;position:relative;overflow:hidden;}
+.proj-sparkline{width:100%;height:100%;}
+.proj-body{padding:1.25rem 1.5rem 1.5rem;flex:1;display:flex;flex-direction:column;}
+.proj-role{font-size:0.66rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.5rem;}
+.proj-card h3{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:0.8rem;line-height:1.3;}
+.case-block{margin-bottom:0.8rem;}
+.case-label{font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--soft);margin-bottom:3px;}
+.case-text{font-size:0.82rem;color:var(--muted);line-height:1.65;}
+.proj-metrics{display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.75rem 0;}
+.metric{padding:4px 9px;border-radius:5px;font-size:0.7rem;font-weight:700;}
+.m-blue{background:rgba(79,142,247,0.12);color:var(--accent2);}
+.m-green{background:rgba(15,212,148,0.12);color:#0fd494;}
+.m-amber{background:rgba(245,166,35,0.12);color:#f5a623;}
+.m-purple{background:rgba(155,114,247,0.12);color:#b899ff;}
+.m-teal{background:rgba(20,184,166,0.12);color:#2dd4bf;}
+.proj-techs{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto;}
+.tech{font-size:0.66rem;padding:3px 7px;border-radius:4px;background:var(--bg3);color:var(--soft);border:1px solid var(--border);}
+
+/* AI SECTION */
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.ai-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;transition:border-color 0.2s,transform 0.2s;position:relative;overflow:hidden;}
+.ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--teal));}
+.ai-card:hover{border-color:rgba(155,114,247,0.4);transform:translateY(-3px);}
+.ai-icon{font-size:1.6rem;margin-bottom:0.8rem;}
+.ai-title{font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;}
+.ai-desc{font-size:0.78rem;color:var(--muted);line-height:1.65;}
+
+/* EDU */
+.edu-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:2rem;display:flex;align-items:center;gap:1.5rem;max-width:600px;}
+.edu-icon{width:56px;height:56px;border-radius:12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.edu-card h3{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:4px;}
+.edu-card .sub{font-size:0.83rem;color:var(--muted);}
+.edu-card .yr{font-size:0.76rem;color:var(--accent2);font-weight:600;margin-top:6px;}
+
+/* CONTACT */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;max-width:740px;}
+.c-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;text-decoration:none;color:var(--text);transition:border-color 0.2s,transform 0.2s;}
+.c-item:hover{border-color:rgba(79,142,247,0.5);transform:translateY(-2px);}
+.c-icon{width:40px;height:40px;border-radius:10px;background:rgba(79,142,247,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.c-label{font-size:0.68rem;color:var(--muted);display:block;margin-bottom:2px;}
+.c-val{font-size:0.83rem;font-weight:600;}
+
+footer{text-align:center;padding:2.5rem;font-size:0.78rem;color:var(--soft);border-top:1px solid var(--border);position:relative;z-index:1;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{opacity:0;animation:fadeUp 0.7s ease forwards;}
+.d1{animation-delay:0.1s;}.d2{animation-delay:0.2s;}.d3{animation-delay:0.3s;}.d4{animation-delay:0.4s;}.d5{animation-delay:0.5s;}.d6{animation-delay:0.6s;}
+
+@media(max-width:900px){
+  .about-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  .hero{padding-left:1.5rem;padding-right:1.5rem;}
+  section{padding:3.5rem 1.5rem;}
+  .contact-wrap{grid-template-columns:1fr;}
+  .stat-strip{flex-wrap:wrap;}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border);}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="glow"></div>
+<div class="glow2"></div>
+
+<nav>
+  <a class="nav-logo" href="#home">
+    <div class="nav-dot"></div>
+    Subhana Siddique
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="home">
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag fade-up d1"><div class="hero-tag-dot"></div> Available for opportunities</div>
+    <h1 class="fade-up d2">
+      Transforming enterprise data<br>into <em>actionable intelligence</em>
+    </h1>
+    <p class="hero-sub fade-up d3">
+      Business Intelligence & Analytics Consultant — helping organizations make confident, data-driven decisions through scalable analytics platforms, interactive dashboards, and modern reporting solutions across Qlik Sense, Power BI, Microsoft Fabric, and Databricks.
+    </p>
+    <div class="hero-cta fade-up d4">
+      <a href="#projects" class="btn btn-primary">View my work →</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+
+    <div class="stat-strip fade-up d5">
+      <div class="stat-item">
+        <span class="stat-num">4+</span>
+        <span class="stat-lbl">Years experience</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">30+</span>
+        <span class="stat-lbl">Analytics solutions</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">500+</span>
+        <span class="stat-lbl">Apps migrated</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">99.8%</span>
+        <span class="stat-lbl">Platform availability</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">2K+</span>
+        <span class="stat-lbl">Users supported</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-strip">
+    <div class="chart-bars" id="heroBars"></div>
+  </div>
+</div>
+</div>
+
+<hr class="div">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-label">About me</div>
+  <h2 class="s-title">Analytics-first, business-focused</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I help organizations <strong>transform data into business value</strong> through analytics, automation, and modern BI platforms.</p>
+      <p>Over the past 4+ years, I've worked across enterprise analytics ecosystems — from supporting global Qlik Sense environments serving thousands of users, to designing executive dashboards, cloud-based reporting solutions, and modern analytics architectures using <strong>Power BI and Microsoft Fabric</strong>.</p>
+      <p>My career has been a deliberate progression: starting with deep platform knowledge, then expanding into development, architecture, and now full consulting — always with a focus on delivering analytics that actually move business decisions forward.</p>
+      <p>I believe the best BI is invisible — it gives people the right answer at the right time without friction. That philosophy drives everything I build.</p>
+    </div>
+    <div class="journey-card fade-up d2">
+      <div class="journey-title">Career progression</div>
+      <div class="journey-steps">
+        <div class="j-step">
+          <div class="j-icon" style="background:rgba(79,142,247,0.12);">⚙️</div>
+          <div class="j-content">
+            <div class="j-name">Enterprise Platform Operations</div>
+            <div class="j-desc">Global Qlik Sense Admin · 2,000+ users · 99.8% uptime</div>
+          </div>
+        </div>
+        <div class="j-arrow">↓</div>
+        <div class="j-step">
+          <div class="j-icon" style="background:rgba(15,212,148,0.1);">🏗️</div>
+          <div class="j-content">
+            <div class="j-name">Analytics Architecture & Migration</div>
+            <div class="j-desc">Qlik Architect · APAC platform build · 500+ apps</div>
+          </div>
+        </div>
+        <div class="j-arrow">↓</div>
+        <div class="j-step">
+          <div class="j-icon" style="background:rgba(245,166,35,0.1);">📊</div>
+          <div class="j-content">
+            <div class="j-name">BI Development & Consulting</div>
+            <div class="j-desc">Qlik Sense · Power BI · Multi-source dashboards · NPrinting</div>
+          </div>
+        </div>
+        <div class="j-arrow">↓</div>
+        <div class="j-step">
+          <div class="j-icon" style="background:rgba(155,114,247,0.1);">✨</div>
+          <div class="j-content">
+            <div class="j-name">Modern Analytics Platforms</div>
+            <div class="j-desc">Microsoft Fabric · Power BI · Azure Databricks · AI-assisted analytics</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="s-label">Credentials</div>
+  <h2 class="s-title">Certifications</h2>
+  <div class="cert-row">
+    <div class="cert-badge cert-blue">🏅 Microsoft Certified: Fabric Analytics Engineer Associate</div>
+    <div class="cert-badge cert-amber">🏅 Databricks Certified: Data Analyst Associate</div>
+    <div class="cert-badge cert-purple">🏅 Python Certified</div>
+    <div class="cert-badge cert-green">🏅 Informatica Certified</div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="s-label">Expertise</div>
+  <h2 class="s-title">Skills & technologies</h2>
+  <div class="skills-grid">
+
+    <div class="skill-card bi">
+      <div class="skill-head">
+        <div class="skill-icon" style="background:rgba(79,142,247,0.12);">📊</div>
+        <span class="skill-h">BI & Analytics Platforms</span>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Advanced</div>
+        <div class="tier-tags">
+          <span class="tag advanced">Qlik Sense</span>
+          <span class="tag advanced">Qlik NPrinting</span>
+          <span class="tag advanced">Power BI</span>
+          <span class="tag advanced">DAX</span>
+        </div>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Proficient</div>
+        <div class="tier-tags">
+          <span class="tag proficient">Microsoft Fabric</span>
+          <span class="tag proficient">Qlik SaaS</span>
+          <span class="tag proficient">OneLake</span>
+          <span class="tag proficient">Dataflows Gen2</span>
+        </div>
+      </div>
+      <div class="tier-tags" style="margin-top:0.6rem;">
+        <span class="tag">QMC</span><span class="tag">QVD Layers</span><span class="tag">Data Storytelling</span>
+        <span class="tag">KPI Frameworks</span><span class="tag">Data Modeling</span>
+      </div>
+    </div>
+
+    <div class="skill-card script">
+      <div class="skill-head">
+        <div class="skill-icon" style="background:rgba(155,114,247,0.12);">⌨️</div>
+        <span class="skill-h">Querying & Scripting</span>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Advanced</div>
+        <div class="tier-tags">
+          <span class="tag advanced">SQL</span>
+          <span class="tag advanced">Qlik Load Script</span>
+          <span class="tag advanced">Power Query (M)</span>
+        </div>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Proficient</div>
+        <div class="tier-tags">
+          <span class="tag proficient">Python</span>
+          <span class="tag proficient">PowerShell</span>
+          <span class="tag proficient">Bash</span>
+        </div>
+      </div>
+      <div class="tier-tags" style="margin-top:0.6rem;">
+        <span class="tag">DAX</span><span class="tag">AWS CLI</span><span class="tag">Qlik CLI</span><span class="tag">HTML/CSS</span>
+      </div>
+    </div>
+
+    <div class="skill-card db">
+      <div class="skill-head">
+        <div class="skill-icon" style="background:rgba(15,212,148,0.12);">🗄️</div>
+        <span class="skill-h">Databases & Data Sources</span>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Advanced</div>
+        <div class="tier-tags">
+          <span class="tag advanced">Redshift</span>
+          <span class="tag advanced">SQL Server</span>
+          <span class="tag advanced">SAP</span>
+          <span class="tag advanced">Oracle</span>
+        </div>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Proficient</div>
+        <div class="tier-tags">
+          <span class="tag proficient">Databricks</span>
+          <span class="tag proficient">PostgreSQL</span>
+          <span class="tag proficient">Azure SQL</span>
+        </div>
+      </div>
+      <div class="tier-tags" style="margin-top:0.6rem;">
+        <span class="tag">SharePoint</span><span class="tag">REST APIs</span><span class="tag">Matillion</span><span class="tag">Informatica</span>
+      </div>
+    </div>
+
+    <div class="skill-card cloud">
+      <div class="skill-head">
+        <div class="skill-icon" style="background:rgba(245,166,35,0.12);">☁️</div>
+        <span class="skill-h">Cloud & Infrastructure</span>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Advanced</div>
+        <div class="tier-tags">
+          <span class="tag advanced">AWS</span>
+          <span class="tag advanced">EC2</span>
+          <span class="tag advanced">S3</span>
+        </div>
+      </div>
+      <div class="skill-tier">
+        <div class="tier-label">Proficient</div>
+        <div class="tier-tags">
+          <span class="tag proficient">Azure</span>
+          <span class="tag proficient">Azure Databricks</span>
+        </div>
+      </div>
+      <div class="tier-tags" style="margin-top:0.6rem;">
+        <span class="tag">Route 53</span><span class="tag">IAM</span><span class="tag">CloudWatch</span><span class="tag">AMI</span><span class="tag">VPC</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="s-label">Career</div>
+  <h2 class="s-title">Professional experience</h2>
+  <div class="timeline">
+
+    <div class="t-item">
+      <div class="t-dot"></div>
+      <div class="t-period">Jan 2026 – Present</div>
+      <div class="t-title">BI Consultant — Power BI & Microsoft Fabric</div>
+      <div class="t-company">Cognizant Technology Solutions · Pune, India</div>
+      <ul class="t-bullets">
+        <li>Designing and developing Power BI dashboards, reports, and semantic models for enterprise reporting</li>
+        <li>Building data transformation workflows using Power Query and Fabric Dataflows Gen2 on OneLake</li>
+        <li>Implementing role-based security (RLS), governance policies, and performance optimization for large datasets</li>
+        <li>Integrating Azure Databricks and SQL-based data sources into unified Fabric analytics environments</li>
+        <li>Delivering self-service reporting solutions that enable business teams to explore data independently</li>
+      </ul>
+      <div class="t-tags">
+        <span class="tag">Microsoft Fabric</span><span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Azure Databricks</span><span class="tag">OneLake</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-dot"></div>
+      <div class="t-period">Jun 2024 – Jan 2026</div>
+      <div class="t-title">BI Consultant — Qlik Sense & Power BI Developer</div>
+      <div class="t-company">Cognizant Technology Solutions · Pune, India</div>
+      <ul class="t-bullets">
+        <li>Designed and delivered 30+ enterprise BI dashboards supporting executive, operational, and strategic decisions across multiple business units</li>
+        <li>Built complex Qlik Sense applications with advanced set analysis, master items, data storytelling, and optimised load scripts for multi-source models</li>
+        <li>Developed end-to-end QVD data architectures — extraction, transformation, and presentation layers — ensuring scalable, reusable pipelines</li>
+        <li>Integrated data from SAP, Oracle, Redshift, Databricks, SharePoint, REST APIs, and flat files into unified analytics models</li>
+        <li>Configured Qlik NPrinting for automated pixel-perfect report design, scheduling, and distribution via email and portals</li>
+        <li>Built KPI scorecards and executive dashboards with drill-down, bookmarking, and dynamic filtering capabilities</li>
+        <li>Led Qlik-to-Power BI migration POCs, replicating complex Qlik logic in DAX and Power Query for stakeholder evaluation</li>
+        <li>Collaborated with business analysts and stakeholders to translate requirements into impactful self-service analytics solutions</li>
+      </ul>
+      <div class="t-tags">
+        <span class="tag">Qlik Sense</span><span class="tag">Qlik NPrinting</span><span class="tag">Power BI</span><span class="tag">SAP</span><span class="tag">Oracle</span><span class="tag">Matillion</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-dot"></div>
+      <div class="t-period">Feb 2024 – May 2024</div>
+      <div class="t-title">Qlik Architect — APAC Analytics Platform Build & Migration</div>
+      <div class="t-company">Cognizant Technology Solutions · Pune, India</div>
+      <ul class="t-bullets">
+        <li>Architected and deployed a new Qlik Sense Enterprise environment for the Asia Pacific region from the ground up</li>
+        <li>Planned and executed the migration of 500+ Qlik applications with zero data loss and minimal business disruption</li>
+        <li>Designed platform architecture on AWS including AMI provisioning, Route 53 DNS, and security configuration</li>
+        <li>Coordinated with regional stakeholders on migration scheduling, testing, and go-live production deployment</li>
+      </ul>
+      <div class="t-tags">
+        <span class="tag">Qlik Sense Enterprise</span><span class="tag">AWS EC2</span><span class="tag">Route 53</span><span class="tag">PowerShell</span><span class="tag">S3</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-dot"></div>
+      <div class="t-period">Aug 2022 – Feb 2024</div>
+      <div class="t-title">Analytics Platform Engineer — Qlik Sense</div>
+      <div class="t-company">Cognizant Technology Solutions · Pune, India</div>
+      <ul class="t-bullets">
+        <li>Operated a mission-critical global Qlik Sense analytics platform supporting 2,000+ users across enterprise teams — maintained 99.8% availability</li>
+        <li>Built proactive monitoring solutions including a SharePoint token expiry dashboard preventing service disruptions</li>
+        <li>Automated platform maintenance tasks using Bash, PowerShell, and Qlik CLI — reducing manual effort and maintenance windows by 30%</li>
+        <li>Developed automated AWS EBS backup workflows for disaster recovery and business continuity</li>
+        <li>Managed QVD governance, security rules, and access provisioning across a large multi-team environment</li>
+      </ul>
+      <div class="t-tags">
+        <span class="tag">Qlik Enterprise</span><span class="tag">QMC</span><span class="tag">AWS</span><span class="tag">Bash</span><span class="tag">PowerShell</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="s-label">Case studies</div>
+  <h2 class="s-title">Key projects</h2>
+  <div class="proj-grid">
+
+    <!-- Project 1 -->
+    <div class="proj-card">
+      <div class="proj-visual" style="background:linear-gradient(135deg,rgba(245,166,35,0.08),rgba(236,98,146,0.05));">
+        <svg class="proj-sparkline" viewBox="0 0 280 60" preserveAspectRatio="none">
+          <circle cx="30" cy="40" r="12" fill="rgba(245,166,35,0.15)" stroke="rgba(245,166,35,0.4)" stroke-width="1.5"/>
+          <circle cx="80" cy="25" r="18" fill="rgba(245,166,35,0.12)" stroke="rgba(245,166,35,0.35)" stroke-width="1.5"/>
+          <circle cx="150" cy="35" r="14" fill="rgba(79,142,247,0.12)" stroke="rgba(79,142,247,0.35)" stroke-width="1.5"/>
+          <circle cx="210" cy="20" r="20" fill="rgba(155,114,247,0.12)" stroke="rgba(155,114,247,0.35)" stroke-width="1.5"/>
+          <circle cx="260" cy="42" r="10" fill="rgba(15,212,148,0.12)" stroke="rgba(15,212,148,0.35)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="proj-body">
+        <div class="proj-role" style="color:#f5a623;">BI Consultant — Enterprise Dashboard Development</div>
+        <h3>Multi-Source Enterprise BI Framework</h3>
+        <div class="case-block">
+          <div class="case-label">Challenge</div>
+          <div class="case-text">Business teams had data across SAP, Oracle, Redshift, and multiple APIs but no unified view for decision-making — insights were siloed, delayed, and inconsistent.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Solution</div>
+          <div class="case-text">Designed a scalable QVD data architecture and built 30+ interactive Qlik Sense dashboards with advanced set analysis, KPI scorecards, and NPrinting automated report distribution to executives and operations teams.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Business impact</div>
+          <div class="case-text">Unified analytics across 6+ data sources; enabled self-service BI for business teams; eliminated manual report creation through automated NPrinting workflows.</div>
+        </div>
+        <div class="proj-metrics">
+          <span class="metric m-amber">30+ dashboards</span>
+          <span class="metric m-blue">6+ data sources unified</span>
+          <span class="metric m-purple">NPrinting automation</span>
+        </div>
+        <div class="proj-techs">
+          <span class="tech">Qlik Sense</span><span class="tech">NPrinting</span><span class="tech">SAP</span><span class="tech">Oracle</span><span class="tech">Databricks</span><span class="tech">Matillion</span><span class="tech">SharePoint</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="proj-card">
+      <div class="proj-visual" style="background:linear-gradient(135deg,rgba(155,114,247,0.08),rgba(79,142,247,0.05));">
+        <svg class="proj-sparkline" viewBox="0 0 280 60" preserveAspectRatio="none">
+          <path d="M0,55 Q35,20 70,35 Q105,50 140,15 Q175,5 210,25 Q245,40 280,10" fill="none" stroke="rgba(155,114,247,0.6)" stroke-width="2" stroke-dasharray="4,2"/>
+          <path d="M0,55 Q35,30 70,42 Q105,55 140,28 Q175,15 210,35 Q245,48 280,20" fill="none" stroke="rgba(79,142,247,0.4)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="proj-body">
+        <div class="proj-role" style="color:#b899ff;">BI Consultant — Microsoft Fabric & Power BI</div>
+        <h3>Microsoft Fabric Modern Analytics Platform</h3>
+        <div class="case-block">
+          <div class="case-label">Challenge</div>
+          <div class="case-text">Enterprise reporting was fragmented across legacy pipelines with no unified lakehouse architecture, slow refresh cycles, and limited governance controls.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Solution</div>
+          <div class="case-text">Built modern analytics solutions using Microsoft Fabric — Power BI semantic models with DAX KPIs, Dataflows Gen2 for data transformation, RLS security, and Azure Databricks integration for advanced analytics.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Business impact</div>
+          <div class="case-text">Delivered a unified lakehouse on OneLake with governed, reusable datasets; enabled real-time self-service reporting for enterprise stakeholders.</div>
+        </div>
+        <div class="proj-metrics">
+          <span class="metric m-purple">Fabric certified</span>
+          <span class="metric m-blue">RLS governance</span>
+          <span class="metric m-teal">Unified lakehouse</span>
+        </div>
+        <div class="proj-techs">
+          <span class="tech">Microsoft Fabric</span><span class="tech">Power BI</span><span class="tech">DAX</span><span class="tech">OneLake</span><span class="tech">Dataflows Gen2</span><span class="tech">Azure Databricks</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="proj-card">
+      <div class="proj-visual" style="background:linear-gradient(135deg,rgba(15,212,148,0.08),rgba(79,142,247,0.05));">
+        <svg class="proj-sparkline" viewBox="0 0 280 60" preserveAspectRatio="none">
+          <rect x="10" y="40" width="18" height="20" fill="rgba(15,212,148,0.3)" rx="2"/>
+          <rect x="40" y="30" width="18" height="30" fill="rgba(15,212,148,0.4)" rx="2"/>
+          <rect x="70" y="20" width="18" height="40" fill="rgba(15,212,148,0.5)" rx="2"/>
+          <rect x="100" y="10" width="18" height="50" fill="rgba(15,212,148,0.6)" rx="2"/>
+          <rect x="130" y="15" width="18" height="45" fill="rgba(15,212,148,0.55)" rx="2"/>
+          <rect x="160" y="5" width="18" height="55" fill="rgba(15,212,148,0.65)" rx="2"/>
+          <rect x="190" y="8" width="18" height="52" fill="rgba(15,212,148,0.62)" rx="2"/>
+          <rect x="220" y="3" width="18" height="57" fill="rgba(15,212,148,0.7)" rx="2"/>
+          <rect x="250" y="1" width="18" height="59" fill="rgba(15,212,148,0.75)" rx="2"/>
+        </svg>
+      </div>
+      <div class="proj-body">
+        <div class="proj-role" style="color:#0fd494;">Qlik Architect — Regional Analytics Expansion</div>
+        <h3>APAC Analytics Platform Launch</h3>
+        <div class="case-block">
+          <div class="case-label">Challenge</div>
+          <div class="case-text">The Asia Pacific region lacked a dedicated analytics environment, forcing teams to rely on a congested global platform with latency and governance limitations.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Solution</div>
+          <div class="case-text">Architected and deployed a new Qlik Sense Enterprise environment on AWS for APAC. Designed the full platform architecture and led migration of 500+ applications with zero data loss.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Business impact</div>
+          <div class="case-text">Delivered a dedicated regional analytics platform, improving performance for APAC teams, enabling local governance, and expanding analytics access across the region.</div>
+        </div>
+        <div class="proj-metrics">
+          <span class="metric m-green">500+ apps migrated</span>
+          <span class="metric m-blue">Zero data loss</span>
+          <span class="metric m-amber">Minimal downtime</span>
+        </div>
+        <div class="proj-techs">
+          <span class="tech">Qlik Sense Enterprise</span><span class="tech">AWS EC2</span><span class="tech">Route 53</span><span class="tech">AMI</span><span class="tech">S3</span><span class="tech">PowerShell</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="proj-card">
+      <div class="proj-visual" style="background:linear-gradient(135deg,rgba(79,142,247,0.08),rgba(155,114,247,0.05));">
+        <svg class="proj-sparkline" viewBox="0 0 280 60" preserveAspectRatio="none">
+          <polyline points="0,50 40,38 80,42 120,20 160,28 200,12 240,18 280,8" fill="none" stroke="rgba(79,142,247,0.6)" stroke-width="2"/>
+          <polygon points="0,50 40,38 80,42 120,20 160,28 200,12 240,18 280,8 280,60 0,60" fill="rgba(79,142,247,0.07)"/>
+        </svg>
+      </div>
+      <div class="proj-body">
+        <div class="proj-role" style="color:var(--accent2);">Analytics Platform Engineer</div>
+        <h3>Global Enterprise Analytics Platform</h3>
+        <div class="case-block">
+          <div class="case-label">Challenge</div>
+          <div class="case-text">A global Qlik analytics ecosystem serving thousands of users required continuous availability, robust governance, and proactive operational intelligence — at enterprise scale.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Solution</div>
+          <div class="case-text">Managed the end-to-end health of the platform — QVD governance, security rules, access management, and uptime — while building automation tools and proactive monitoring dashboards that dramatically reduced manual intervention.</div>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Business impact</div>
+          <div class="case-text">Maintained 99.8% platform availability for 2,000+ users; reduced maintenance windows by 30% through automation; built early-warning monitoring preventing service disruptions.</div>
+        </div>
+        <div class="proj-metrics">
+          <span class="metric m-green">99.8% availability</span>
+          <span class="metric m-blue">30% less downtime</span>
+          <span class="metric m-amber">2,000+ users</span>
+        </div>
+        <div class="proj-techs">
+          <span class="tech">Qlik Enterprise</span><span class="tech">QMC</span><span class="tech">AWS</span><span class="tech">MongoDB</span><span class="tech">Bash</span><span class="tech">PowerShell</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- AI & INNOVATION -->
+<section id="ai">
+  <div class="s-label">Innovation</div>
+  <h2 class="s-title">AI-assisted analytics</h2>
+  <p style="font-size:0.92rem;color:var(--muted);max-width:640px;margin-bottom:2rem;line-height:1.8;">I actively integrate AI tools into my analytics workflow to accelerate delivery, improve documentation quality, and explore data more effectively — without overstating AI engineering expertise.</p>
+  <div class="ai-grid">
+    <div class="ai-card">
+      <div class="ai-icon">🤖</div>
+      <div class="ai-title">SQL & Script Generation</div>
+      <div class="ai-desc">Using Claude and Copilot to accelerate complex SQL query drafting, Qlik load script optimisation, and DAX formula creation — reducing development time on routine tasks.</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-icon">📝</div>
+      <div class="ai-title">Dashboard Documentation</div>
+      <div class="ai-desc">Leveraging AI tools to auto-generate field definitions, data dictionary entries, and user-facing documentation for BI solutions — improving handoff quality and maintainability.</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-icon">🔍</div>
+      <div class="ai-title">Data Exploration</div>
+      <div class="ai-desc">Using Microsoft Copilot in Fabric and Power BI for natural language data exploration — helping business users surface insights without requiring SQL knowledge.</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-icon">⚡</div>
+      <div class="ai-title">Analytics Acceleration</div>
+      <div class="ai-desc">AI-assisted debugging, code review, and ETL logic generation to speed up analytics delivery cycles and maintain quality across complex multi-source projects.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="s-label">Education</div>
+  <h2 class="s-title">Academic background</h2>
+  <div class="edu-card">
+    <div class="edu-icon">🎓</div>
+    <div>
+      <h3>Bachelor of Technology</h3>
+      <div class="sub">Acropolis Institute of Technology and Research, Indore</div>
+      <div class="yr">2018 – 2022</div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="s-label">Let's connect</div>
+  <h2 class="s-title">Get in touch</h2>
+  <div class="contact-wrap">
+    <a href="mailto:subhanasid07@gmail.com" class="c-item">
+      <div class="c-icon">✉️</div>
+      <div><span class="c-label">Email</span><span class="c-val">subhanasid07@gmail.com</span></div>
+    </a>
+    <a href="https://www.linkedin.com/in/subhanasiddiqui" target="_blank" class="c-item">
+      <div class="c-icon">💼</div>
+      <div><span class="c-label">LinkedIn</span><span class="c-val">/in/subhanasiddiqui</span></div>
+    </a>
+    <div class="c-item" style="cursor:default;">
+      <div class="c-icon">📍</div>
+      <div><span class="c-label">Location</span><span class="c-val">Pune, India</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2025 Subhana Siddique · Business Intelligence & Analytics Consultant</footer>
+
+<script>
+// animated hero bars
+const colors=['#4f8ef7','#9b72f7','#0fd494','#f5a623','#f06292','#7ab3ff','#2dd4bf','#b899ff'];
+const heights=[60,85,45,95,70,55,80,65,90,75,50,88,62,78,92,58,72,84,68,96];
+const container=document.getElementById('heroBars');
+heights.forEach((h,i)=>{
+  const bar=document.createElement('div');
+  bar.className='bar';
+  bar.style.cssText=`height:${h}%;background:${colors[i%colors.length]};transition:height 0.5s ease ${i*0.03}s;`;
+  container.appendChild(bar);
+});
+
+// fade up on scroll
+const fadeObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.t-item,.proj-card,.skill-card,.cert-badge,.ai-card,.j-step').forEach(el=>{
+  el.style.cssText+='opacity:0;transform:translateY(18px);transition:opacity 0.55s ease,transform 0.55s ease;';
+  fadeObs.observe(el);
+});
+</script>
+</body>
+</html>
