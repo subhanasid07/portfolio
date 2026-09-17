@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal File Converter</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
+<style>
+:root{
+  --bg:#f6f5f3;
+  --surface:#ffffff;
+  --surface-2:#f0eee9;
+  --border:#e2ddd4;
+  --text:#22201c;
+  --text-muted:#6b6459;
+  --accent:#b5652f;
+  --accent-hover:#9a5527;
+  --accent-soft:#f3e3d5;
+  --ok:#3f7d4f;
+  --ok-soft:#e5f1e6;
+  --err:#b23b3b;
+  --err-soft:#fbe8e6;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: Georgia, "Iowan Old Style", serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1a1815;
+    --surface:#242220;
+    --surface-2:#2c2a26;
+    --border:#3a372f;
+    --text:#ece8e1;
+    --text-muted:#a39c8e;
+    --accent:#d98a4f;
+    --accent-hover:#e39a63;
+    --accent-soft:#3a2c1f;
+    --ok:#7fbf8f;
+    --ok-soft:#213024;
+    --err:#e08080;
+    --err-soft:#341f1f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1a1815;
+  --surface:#242220;
+  --surface-2:#2c2a26;
+  --border:#3a372f;
+  --text:#ece8e1;
+  --text-muted:#a39c8e;
+  --accent:#d98a4f;
+  --accent-hover:#e39a63;
+  --accent-soft:#3a2c1f;
+  --ok:#7fbf8f;
+  --ok-soft:#213024;
+  --err:#e08080;
+  --err-soft:#341f1f;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-sans);
+  line-height:1.5;
+  min-height:100vh;
+  padding:24px 16px 64px;
+}
+.wrap{max-width:720px;margin:0 auto;}
+header{margin-bottom:22px;}
+h1{
+  font-family:var(--font-serif);
+  font-size:1.7rem;
+  margin:0 0 6px;
+  letter-spacing:-0.01em;
+}
+.sub{color:var(--text-muted);font-size:0.92rem;max-width:56ch;}
+
+.tabs{display:flex;gap:8px;margin:20px 0 16px;border-bottom:1px solid var(--border);}
+.tab{
+  flex:1;
+  padding:11px 10px;
+  text-align:center;
+  background:none;
+  border:none;
+  color:var(--text-muted);
+  font-size:0.95rem;
+  font-weight:600;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:color .15s;
+}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.panel{display:none;}
+.panel.active{display:block;}
+
+.dropzone{
+  border:1.5px dashed var(--border);
+  border-radius:12px;
+  background:var(--surface);
+  padding:28px 16px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone.drag{border-color:var(--accent);background:var(--accent-soft);}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px;}
+.dropzone .main{font-weight:600;font-size:0.95rem;}
+.dropzone .hint{color:var(--text-muted);font-size:0.82rem;margin-top:4px;}
+input[type=file]{display:none;}
+
+.formats{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;
+}
+.chip{
+  font-size:0.74rem;
+  padding:3px 9px;
+  border-radius:999px;
+  background:var(--surface-2);
+  color:var(--text-muted);
+  border:1px solid var(--border);
+}
+
+.filelist{margin-top:18px;display:flex;flex-direction:column;gap:8px;}
+.file-row{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.file-icon{font-size:1.3rem;flex-shrink:0;}
+.file-meta{flex:1;min-width:0;}
+.file-name{font-size:0.88rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-status{font-size:0.78rem;color:var(--text-muted);margin-top:1px;}
+.file-status.ok{color:var(--ok);}
+.file-status.err{color:var(--err);}
+.dl-btn{
+  font-size:0.8rem;
+  padding:6px 12px;
+  border-radius:7px;
+  border:1px solid var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.dl-btn:hover{background:var(--accent);color:#fff;}
+.spinner{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--border);border-top-color:var(--accent);
+  animation:spin .7s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.actions{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+.btn-primary{
+  font-size:0.86rem;padding:9px 16px;border-radius:8px;border:none;
+  background:var(--accent);color:#fff;font-weight:600;cursor:pointer;
+}
+.btn-primary:hover{background:var(--accent-hover);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-ghost{
+  font-size:0.86rem;padding:9px 16px;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface);color:var(--text);
+  font-weight:600;cursor:pointer;
+}
+
+.note{
+  margin-top:22px;padding:12px 14px;border-radius:10px;
+  background:var(--surface-2);border:1px solid var(--border);
+  font-size:0.8rem;color:var(--text-muted);
+}
+.note b{color:var(--text);}
+.note ul{margin:6px 0 0;padding-left:18px;}
+.note li{margin-bottom:3px;}
+
+.privacy{
+  margin-top:14px;font-size:0.78rem;color:var(--text-muted);
+  display:flex;align-items:center;gap:6px;
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>🔄 Universal File Converter</h1>
+    <div class="sub">Convert documents and images right in your browser — nothing is uploaded anywhere.</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="docs">📄 Docs → PDF</button>
+    <button class="tab" data-tab="img">🖼️ Images → PNG</button>
+  </div>
+
+  <!-- DOCS PANEL -->
+  <div class="panel active" id="panel-docs">
+    <div class="dropzone" id="dz-docs">
+      <div class="icon">📄</div>
+      <div class="main">Tap to choose files, or drag them here</div>
+      <div class="hint">Word, Excel, PowerPoint and more</div>
+    </div>
+    <input type="file" id="input-docs" multiple accept=".docx,.doc,.xlsx,.xls,.csv,.pptx,.ppt">
+    <div class="formats">
+      <span class="chip">.docx</span><span class="chip">.xlsx / .xls</span>
+      <span class="chip">.csv</span><span class="chip">.pptx</span>
+    </div>
+    <div class="filelist" id="list-docs"></div>
+    <div class="actions" id="actions-docs" style="display:none;">
+      <button class="btn-primary" id="zip-docs">Download All (.zip)</button>
+      <button class="btn-ghost" id="clear-docs">Clear</button>
+    </div>
+
+    <div class="note">
+      <b>Good to know</b>
+      <ul>
+        <li><b>.docx</b> converts with formatting preserved (text, headings, tables, basic styling).</li>
+        <li><b>.xlsx / .xls / .csv</b> converts each sheet into a formatted table, one per page.</li>
+        <li><b>.pptx</b> extracts slide text only (no images or exact layout) — browsers can't render true PPTX slides.</li>
+        <li>Legacy binary <b>.doc</b> and <b>.ppt</b> files aren't supported — open them in Word/PowerPoint and save as .docx/.pptx first.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- IMAGES PANEL -->
+  <div class="panel" id="panel-img">
+    <div class="dropzone" id="dz-img">
+      <div class="icon">🖼️</div>
+      <div class="main">Tap to choose images, or drag them here</div>
+      <div class="hint">HEIC, JPG, WEBP, GIF, BMP, SVG and more → PNG</div>
+    </div>
+    <input type="file" id="input-img" multiple accept="image/*,.heic,.heif">
+    <div class="formats">
+      <span class="chip">.heic / .heif</span><span class="chip">.jpg / .jpeg</span>
+      <span class="chip">.webp</span><span class="chip">.gif</span>
+      <span class="chip">.bmp</span><span class="chip">.svg</span>
+    </div>
+    <div class="filelist" id="list-img"></div>
+    <div class="actions" id="actions-img" style="display:none;">
+      <button class="btn-primary" id="zip-img">Download All (.zip)</button>
+      <button class="btn-ghost" id="clear-img">Clear</button>
+    </div>
+
+    <div class="note">
+      <b>Good to know</b>
+      <ul>
+        <li>iPhone <b>HEIC/HEIF</b> photos convert automatically to PNG.</li>
+        <li>Animated GIFs convert to a single still PNG frame.</li>
+        <li>Very large images may take a few seconds to process.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="privacy">🔒 All conversion happens locally on your device — files are never sent to a server.</div>
+</div>
+
+<script>
+const { jsPDF } = window.jspdf;
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------- generic state ---------- */
+const state = { docs: [], img: [] };
+
+function extOf(name){ return (name.split('.').pop()||'').toLowerCase(); }
+function baseName(name){ return name.replace(/\.[^.]+$/,''); }
+function fmtSize(bytes){
+  if(bytes<1024) return bytes+' B';
+  if(bytes<1024*1024) return (bytes/1024).toFixed(0)+' KB';
+  return (bytes/1024/1024).toFixed(1)+' MB';
+}
+
+function makeRow(icon, name, size){
+  const row = document.createElement('div');
+  row.className = 'file-row';
+  row.innerHTML = `
+    <div class="file-icon">${icon}</div>
+    <div class="file-meta">
+      <div class="file-name">${name}</div>
+      <div class="file-status">${fmtSize(size)} · waiting…</div>
+    </div>
+    <div class="spinner"></div>
+  `;
+  return row;
+}
+
+function rowSetStatus(row, text, cls){
+  const s = row.querySelector('.file-status');
+  s.textContent = text;
+  s.className = 'file-status' + (cls ? ' '+cls : '');
+}
+
+function rowSetDone(row, blob, filename){
+  row.querySelector('.spinner').remove();
+  const btn = document.createElement('button');
+  btn.className = 'dl-btn';
+  btn.textContent = 'Download';
+  const url = URL.createObjectURL(blob);
+  btn.addEventListener('click', ()=>{
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+  });
+  row.appendChild(btn);
+}
+
+function rowSetError(row, msg){
+  row.querySelector('.spinner').remove();
+  rowSetStatus(row, msg, 'err');
+}
+
+/* ================= IMAGES → PNG ================= */
+const dzImg = document.getElementById('dz-img');
+const inputImg = document.getElementById('input-img');
+const listImg = document.getElementById('list-img');
+const actionsImg = document.getElementById('actions-img');
+
+dzImg.addEventListener('click', ()=>inputImg.click());
+['dragover','dragenter'].forEach(ev=>dzImg.addEventListener(ev, e=>{e.preventDefault();dzImg.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>dzImg.addEventListener(ev, e=>{e.preventDefault();dzImg.classList.remove('drag');}));
+dzImg.addEventListener('drop', e=>handleImgFiles(e.dataTransfer.files));
+inputImg.addEventListener('change', e=>handleImgFiles(e.target.files));
+
+function handleImgFiles(fileList){
+  const files = Array.from(fileList);
+  if(!files.length) return;
+  actionsImg.style.display = 'flex';
+  files.forEach(file=>{
+    const row = makeRow('🖼️', file.name, file.size);
+    listImg.appendChild(row);
+    convertImage(file, row);
+  });
+}
+
+async function loadImageBitmapCanvas(file){
+  const url = URL.createObjectURL(file);
+  try{
+    const img = new Image();
+    await new Promise((res, rej)=>{
+      img.onload = res;
+      img.onerror = ()=>rej(new Error('Could not decode image'));
+      img.src = url;
+    });
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth || img.width;
+    canvas.height = img.naturalHeight || img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    return canvas;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+async function convertImage(file, row){
+  try{
+    const ext = extOf(file.name);
+    let pngBlob;
+    if(ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif'){
+      rowSetStatus(row, 'decoding HEIC…');
+      let result = await heic2any({ blob: file, toType: 'image/png' });
+      if(Array.isArray(result)) result = result[0];
+      pngBlob = result;
+    } else if(ext === 'png' && file.type === 'image/png'){
+      rowSetStatus(row, 'already PNG — copying…');
+      pngBlob = file;
+    } else {
+      rowSetStatus(row, 'converting…');
+      const canvas = await loadImageBitmapCanvas(file);
+      pngBlob = await new Promise(res=>canvas.toBlob(res, 'image/png'));
+    }
+    if(!pngBlob) throw new Error('Conversion produced no output');
+    const outName = baseName(file.name) + '.png';
+    state.img.push({ name: outName, blob: pngBlob });
+    rowSetStatus(row, 'done', 'ok');
+    rowSetDone(row, pngBlob, outName);
+  } catch(err){
+    console.error(err);
+    rowSetError(row, 'failed: ' + (err.message || 'unknown error'));
+  }
+}
+
+document.getElementById('clear-img').addEventListener('click', ()=>{
+  listImg.innerHTML=''; state.img = []; actionsImg.style.display='none';
+});
+document.getElementById('zip-img').addEventListener('click', async ()=>{
+  if(!state.img.length) return;
+  const zip = new JSZip();
+  state.img.forEach(f=>zip.file(f.name, f.blob));
+  const blob = await zip.generateAsync({type:'blob'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'converted-images.zip'; a.click();
+});
+
+/* ================= DOCS → PDF ================= */
+const dzDocs = document.getElementById('dz-docs');
+const inputDocs = document.getElementById('input-docs');
+const listDocs = document.getElementById('list-docs');
+const actionsDocs = document.getElementById('actions-docs');
+
+dzDocs.addEventListener('click', ()=>inputDocs.click());
+['dragover','dragenter'].forEach(ev=>dzDocs.addEventListener(ev, e=>{e.preventDefault();dzDocs.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>dzDocs.addEventListener(ev, e=>{e.preventDefault();dzDocs.classList.remove('drag');}));
+dzDocs.addEventListener('drop', e=>handleDocFiles(e.dataTransfer.files));
+inputDocs.addEventListener('change', e=>handleDocFiles(e.target.files));
+
+function handleDocFiles(fileList){
+  const files = Array.from(fileList);
+  if(!files.length) return;
+  actionsDocs.style.display = 'flex';
+  files.forEach(file=>{
+    const row = makeRow(iconFor(file.name), file.name, file.size);
+    listDocs.appendChild(row);
+    convertDoc(file, row);
+  });
+}
+
+function iconFor(name){
+  const ext = extOf(name);
+  if(ext==='docx'||ext==='doc') return '📝';
+  if(ext==='xlsx'||ext==='xls'||ext==='csv') return '📊';
+  if(ext==='pptx'||ext==='ppt') return '📽️';
+  return '📄';
+}
+
+async function convertDoc(file, row){
+  const ext = extOf(file.name);
+  try{
+    if(ext === 'doc' || ext === 'ppt'){
+      throw new Error('legacy .' + ext + ' not supported — re-save as .' + (ext==='doc'?'docx':'pptx') + ' first');
+    }
+    let pdfBlob, outName = baseName(file.name) + '.pdf';
+    if(ext === 'docx'){
+      rowSetStatus(row, 'reading Word document…');
+      pdfBlob = await docxToPdf(file, row);
+    } else if(ext === 'xlsx' || ext === 'xls' || ext === 'csv'){
+      rowSetStatus(row, 'reading spreadsheet…');
+      pdfBlob = await sheetToPdf(file, row);
+    } else if(ext === 'pptx'){
+      rowSetStatus(row, 'reading slides…');
+      pdfBlob = await pptxToPdf(file, row);
+    } else {
+      throw new Error('unsupported file type .' + ext);
+    }
+    state.docs.push({ name: outName, blob: pdfBlob });
+    rowSetStatus(row, 'done', 'ok');
+    rowSetDone(row, pdfBlob, outName);
+  } catch(err){
+    console.error(err);
+    rowSetError(row, 'failed: ' + (err.message || 'unknown error'));
+  }
+}
+
+async function docxToPdf(file, row){
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await mammoth.convertToHtml({ arrayBuffer });
+  rowSetStatus(row, 'rendering PDF…');
+
+  const container = document.createElement('div');
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  container.style.top = '0';
+  container.style.width = '760px';
+  container.style.padding = '20px';
+  container.style.background = '#ffffff';
+  container.style.color = '#111111';
+  container.style.fontFamily = 'Georgia, serif';
+  container.style.fontSize = '14px';
+  container.style.lineHeight = '1.5';
+  container.innerHTML = result.value || '<p><em>(empty document)</em></p>';
+  document.body.appendChild(container);
+
+  try{
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    await doc.html(container, {
+      x: 20, y: 20,
+      width: 555,
+      windowWidth: 800,
+      autoPaging: 'text',
+      html2canvas: { scale: 0.75 }
+    });
+    return doc.output('blob');
+  } finally {
+    container.remove();
+  }
+}
+
+async function sheetToPdf(file, row){
+  const arrayBuffer = await file.arrayBuffer();
+  const wb = XLSX.read(arrayBuffer, { type: 'array' });
+  rowSetStatus(row, 'building PDF…');
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  let first = true;
+  wb.SheetNames.forEach(sheetName=>{
+    const ws = wb.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: '' });
+    if(!first) doc.addPage();
+    first = false;
+    doc.setFontSize(12);
+    doc.text(sheetName, 30, 30);
+    if(rows.length){
+      doc.autoTable({
+        head: [rows[0]],
+        body: rows.slice(1),
+        startY: 42,
+        margin: { left: 20, right: 20 },
+        styles: { fontSize: 8, cellPadding: 3 },
+        headStyles: { fillColor: [181,101,47] }
+      });
+    } else {
+      doc.setFontSize(10);
+      doc.text('(empty sheet)', 30, 50);
+    }
+  });
+  return doc.output('blob');
+}
+
+async function pptxToPdf(file, row){
+  const zip = await JSZip.loadAsync(file);
+  const slideFiles = Object.keys(zip.files)
+    .filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n))
+    .sort((a,b)=>{
+      const na = parseInt(a.match(/slide(\d+)\.xml/)[1], 10);
+      const nb = parseInt(b.match(/slide(\d+)\.xml/)[1], 10);
+      return na - nb;
+    });
+  if(!slideFiles.length) throw new Error('no slides found');
+
+  rowSetStatus(row, 'extracting slide text…');
+  const parser = new DOMParser();
+  const slides = [];
+  for(const path of slideFiles){
+    const xml = await zip.file(path).async('text');
+    const dom = parser.parseFromString(xml, 'application/xml');
+    const paragraphs = Array.from(dom.getElementsByTagName('a:p'));
+    const lines = paragraphs.map(p=>{
+      const runs = Array.from(p.getElementsByTagName('a:t'));
+      return runs.map(r=>r.textContent).join('');
+    }).filter(line=>line.trim().length>0);
+    slides.push(lines);
+  }
+
+  rowSetStatus(row, 'building PDF…');
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  slides.forEach((lines, i)=>{
+    if(i>0) doc.addPage();
+    doc.setFontSize(14);
+    doc.text('Slide ' + (i+1), 30, 40);
+    doc.setFontSize(11);
+    let y = 65;
+    if(!lines.length){
+      doc.text('(no text on this slide)', 30, y);
+    } else {
+      lines.forEach((line, idx)=>{
+        const wrapped = doc.splitTextToSize('• ' + line, 535);
+        if(y + wrapped.length*14 > 800){ doc.addPage(); y = 40; }
+        doc.text(wrapped, 30, y);
+        y += wrapped.length*14 + 8;
+      });
+    }
+  });
+  return doc.output('blob');
+}
+
+document.getElementById('clear-docs').addEventListener('click', ()=>{
+  listDocs.innerHTML=''; state.docs = []; actionsDocs.style.display='none';
+});
+document.getElementById('zip-docs').addEventListener('click', async ()=>{
+  if(!state.docs.length) return;
+  const zip = new JSZip();
+  state.docs.forEach(f=>zip.file(f.name, f.blob));
+  const blob = await zip.generateAsync({type:'blob'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'converted-documents.zip'; a.click();
+});
+</script>
+</body>
+</html>
